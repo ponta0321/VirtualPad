@@ -14,17 +14,13 @@ namespace RPGMaker.Codebase.Addon.ponApp.VirtualPad
     {
         Action _TryToMoveCharacterDelegate;
         Action _TryToMoveVehicleDelegate;
-        InputSystemUIInputModule _EventInputModule;
-        InputActionAsset _CustomInputAction;
 
         private void Start() {
             InitTryToMoveMethod();
-            InitCustomInputAction();
         }
 
         private void Update() {
             KillTryToMove();
-            SetCustomInputAction();
         }
 
         private void InitTryToMoveMethod() {
@@ -42,17 +38,6 @@ namespace RPGMaker.Codebase.Addon.ponApp.VirtualPad
             }
         }
 
-        private void InitCustomInputAction() {
-            try
-            {
-                _CustomInputAction = UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<InputActionAsset>("Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/InputAction/VirtualPadUI.inputactions");
-            }
-            catch (Exception)
-            {
-                Debug.LogWarning("Warning : InitCustomInputAction initialization failed.");
-            }
-        }
-
         private void KillTryToMove() {
             try
             {
@@ -62,22 +47,6 @@ namespace RPGMaker.Codebase.Addon.ponApp.VirtualPad
             catch (Exception)
             {
                 //Debug.LogWarning("Warning : KillTryToMove update failed.");
-            }
-        }
-
-        private void SetCustomInputAction() {
-            try
-            {
-                if (_EventInputModule != null)
-                {
-                    return;
-                }
-                _EventInputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
-                _EventInputModule.actionsAsset = _CustomInputAction;
-            }
-            catch (Exception)
-            {
-                //Debug.LogWarning("Warning : SetCustomInputAction update failed.");
             }
         }
     }

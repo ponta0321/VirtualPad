@@ -3,6 +3,110 @@
  * @author ponApp
  * @help A virtual gamepad is displayed on the screen, and by touching the screen you can perform the same operations as using a gamepad.
  * 
+ * @param ButtonSize
+ * @text Button Size
+ * @desc Sets the size of the button.
+ * @type integer
+ * @default 96
+ * 
+ * @param ButtonTextSize
+ * @text Button Text Size
+ * @desc Sets the text to be displayed in the center of the button.
+ * @type integer
+ * @default 36
+ * 
+ * @param ButtonPadding
+ * @text Button Spacing
+ * @desc Sets the distance between buttons.
+ * @type integer
+ * @default 0
+ * 
+ * @param CornerPadding
+ * @text Distance to the edge of the screen
+ * @desc Sets the distance between the edge of the screen and the button.
+ * @type integer
+ * @default 48
+ * 
+ * @param NumbeOfButtons
+ * @text Number of buttons
+ * @desc Set from 2 and 4 buttons.
+ * @type select
+ * @option 2
+ * @option 4
+ * @default 2
+ * 
+ * @param StickMovementRange
+ * @text Range of stick button movement
+ * @desc Set the range of stick button movement.
+ * @type integer
+ * @default 50
+ * 
+ * @param StickButtonImage
+ * @text Stick button image
+ * @desc Set the full path of the stick button image (png).
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
+ * 
+ * @param StickButtonText
+ * @text Stick Button Text
+ * @desc Set the text to be displayed in the center of the stick button.
+ * @type string
+ * @default 
+ * 
+ * @param StickUnderImage
+ * @text Stick button bottom image
+ * @desc Set the stick button bottom image (png) with full path.
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
+ * 
+ * @param ButtonNorthImage
+ * @text North button image
+ * @desc Set the full path of the north button image (png).
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/ybtn.png
+ * 
+ * @param ButtonNorthText
+ * @text Text of North button
+ * @desc Set the text to be displayed in the center of the North button.
+ * @type string
+ * @default Y
+ * 
+ * @param ButtonEastImage
+ * @text East button image
+ * @desc Set the east button image (png) with the full path.
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/rbtn.png
+ * 
+ * @param ButtonEastText
+ * @text Text of East button
+ * @desc Set the text to be displayed in the center of the East button.
+ * @type string
+ * @default B
+ * 
+ * @param ButtonSouthImage
+ * @text South button image
+ * @desc Set the south button image (png) with the full path.
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/gbtn.png
+ * 
+ * @param ButtonSouthText
+ * @text Text of South button
+ * @desc Set the text to be displayed in the center of the South button.
+ * @type string
+ * @default A
+ * 
+ * @param ButtonWestImage
+ * @text West button image
+ * @desc Set the west button image (png) with the full path.
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/bbtn.png
+ * 
+ * @param ButtonWestText
+ * @text Text of West button
+ * @desc Set the text to be displayed in the center of the West button.
+ * @type string
+ * @default X
+ * 
  */
 
 /*:ja
@@ -15,6 +119,12 @@
  * @desc ボタンの大きさを設定します。
  * @type integer
  * @default 96
+ * 
+ * @param ButtonTextSize
+ * @text ボタンのテキストの大きさ
+ * @desc ボタンのテキストの大きさを設定します。
+ * @type integer
+ * @default 36
  * 
  * @param ButtonPadding
  * @text ボタンの間隔
@@ -36,17 +146,17 @@
  * @option 4
  * @default 2
  * 
- * @param StickButtonImage
- * @text スティックボタンの画像
- * @desc パッド左側のスティックボタンの画像を設定します。
- * @type string
- * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
- * 
  * @param StickMovementRange
  * @text スティックボタンの動かせる範囲
  * @desc スティックボタンの動かせる範囲を設定します。
  * @type integer
  * @default 50
+ * 
+ * @param StickButtonImage
+ * @text スティックボタンの画像
+ * @desc パッド左側のスティックボタンの画像を設定します。
+ * @type string
+ * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
  * 
  * @param StickButtonText
  * @text スティックボタンのテキスト
@@ -122,20 +232,13 @@ namespace RPGMaker.Codebase.Addon
 {
     public class ponAppVirtualPad : MonoBehaviour
     {
-        private enum Direction
-        {
-            North,
-            East,
-            South,
-            West
-        }
-
         private int _ButtonSize;
+        private int _ButtonTextSize;
         private int _ButtonPadding;
         private int _CornerPadding;
         private int _NumbeOfButtons;
-        private string _StickButtonImage;
         private int _StickMovementRange;
+        private string _StickButtonImage;
         private string _StickButtonText;
         private string _StickUnderImage;
         private string _ButtonNorthImage;
@@ -149,11 +252,12 @@ namespace RPGMaker.Codebase.Addon
 
         public ponAppVirtualPad(
             int ButtonSize,
+            int ButtonTextSize,
             int ButtonPadding,
             int CornerPadding,
             int NumbeOfButtons,
-            string StickButtonImage,
             int StickMovementRange,
+            string StickButtonImage,
             string StickButtonText,
             string StickUnderImage,
             string ButtonNorthImage,
@@ -166,6 +270,7 @@ namespace RPGMaker.Codebase.Addon
             string ButtonWestText
         ) {
             _ButtonSize = ButtonSize;
+            _ButtonTextSize = ButtonTextSize;
             _ButtonPadding = ButtonPadding;
             _CornerPadding = CornerPadding;
             _NumbeOfButtons = NumbeOfButtons;
@@ -279,7 +384,6 @@ namespace RPGMaker.Codebase.Addon
                 }
                 underObjImage.color = new Color(0, 0, 0, 0.5f);
 
-
                 var obj = new GameObject("StickButton");
                 obj.transform.SetParent(underObjRectTransform);
                 RectTransform rectTransform = obj.AddComponent<RectTransform>();
@@ -318,7 +422,7 @@ namespace RPGMaker.Codebase.Addon
                 txtObjRectTransform.localPosition = new Vector3(0, 0, 0);
                 var txtObjText = txtObj.AddComponent<Text>();
                 txtObjText.font = font;
-                txtObjText.fontSize = 24;
+                txtObjText.fontSize = _ButtonTextSize;
                 txtObjText.color = Color.black;
                 txtObjText.text = _StickButtonText;
                 txtObjText.alignment = TextAnchor.MiddleCenter;
@@ -430,7 +534,7 @@ namespace RPGMaker.Codebase.Addon
                 txtObjRectTransform.localPosition = new Vector3(0, 0, 0);
                 var txtObjText = txtObj.AddComponent<Text>();
                 txtObjText.font = font;
-                txtObjText.fontSize = 24;
+                txtObjText.fontSize = _ButtonTextSize;
                 txtObjText.color = Color.black;
                 txtObjText.text = text;
                 txtObjText.alignment = TextAnchor.MiddleCenter;
@@ -462,7 +566,7 @@ namespace RPGMaker.Codebase.Addon
                 }
                 return font.GetComponent<Text>().font;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
