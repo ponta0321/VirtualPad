@@ -11,7 +11,7 @@ namespace RPGMaker.Codebase.Addon.ponApp.VirtualPad
     {
         private const string _OriginalFileA = "EventSystem.prefab";
         private const string _OriginalFileB = "InputSystem.prefab";
-        private const string _OriginalSourcePath = "/RPGMaker/InputSystem/";
+        private const string _OriginalSourcePath = "/Resources/";
         private const string _ReplaceFilePath = "/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Prefabs/";
         private const string _BackUpDestPath = "/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/.BackUp/";
 
