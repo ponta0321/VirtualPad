@@ -14,7 +14,7 @@
  * @text ボタンの大きさ
  * @desc ボタンの大きさを設定します。
  * @type integer
- * @default 50
+ * @default 96
  * 
  * @param ButtonPadding
  * @text ボタンの間隔
@@ -26,7 +26,7 @@
  * @text 画面端までの間隔
  * @desc ボタンから画面端までの間隔の大きさを設定します。
  * @type integer
- * @default 10
+ * @default 24
  * 
  * @param ButtonUpImage
  * @text 上ボタンの画像
@@ -239,10 +239,10 @@ namespace RPGMaker.Codebase.Addon
                     "ButtonRight",
                     "ButtonDown", 
                     "ButtonLeft", 
-                    "ButtonNorth", 
+                    /*"ButtonNorth",*/ 
                     "ButtonEast", 
                     "ButtonSouth", 
-                    "ButtonWest"
+                    /*"ButtonWest"*/
                 };
                 foreach (var keName in keyNames)
                 {
@@ -254,7 +254,7 @@ namespace RPGMaker.Codebase.Addon
                 }
                 var canvasScaler = canvasObject.AddComponent<CanvasScaler>();
                 canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                canvasScaler.referenceResolution = new Vector2(1920, 1080);
+                canvasScaler.referenceResolution = new Vector2(1080, 1080);
                 canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
 
                 canvasObject.AddComponent<KillTryToMove>();
@@ -288,7 +288,7 @@ namespace RPGMaker.Codebase.Addon
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding,
                             _ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/UpArrow";
+                        controlPath = "<Gamepad>/dpad/up";
                         sprite = string.IsNullOrEmpty(_ButtonUpImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonUpImage);
                         text = _ButtonUpText;
                         break;
@@ -298,7 +298,7 @@ namespace RPGMaker.Codebase.Addon
                             _ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding,
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/RightArrow";
+                        controlPath = "<Gamepad>/dpad/right";
                         sprite = string.IsNullOrEmpty(_ButtonRightImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonRightImage);
                         text = _ButtonRightText;
                         break;
@@ -308,7 +308,7 @@ namespace RPGMaker.Codebase.Addon
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding,
                             _ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/DownArrow";
+                        controlPath = "<Gamepad>/dpad/down";
                         sprite = string.IsNullOrEmpty(_ButtonDownImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonDownImage);
                         text = _ButtonDownText;
                         break;
@@ -318,7 +318,7 @@ namespace RPGMaker.Codebase.Addon
                             _ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding,
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/LeftArrow";
+                        controlPath = "<Gamepad>/dpad/left";
                         sprite = string.IsNullOrEmpty(_ButtonLeftImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonLeftImage);
                         text = _ButtonLeftText;
                         break;
@@ -327,7 +327,7 @@ namespace RPGMaker.Codebase.Addon
                             (_ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding) * -1,
                             _ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/Escape";
+                        controlPath = "<Gamepad>/buttonNorth";
                         sprite = string.IsNullOrEmpty(_ButtonNorthImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonNorthImage);
                         text = _ButtonNorthText;
                         break;
@@ -336,7 +336,7 @@ namespace RPGMaker.Codebase.Addon
                             (_ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding) * -1,
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/Escape";
+                        controlPath = "<Gamepad>/buttonEast";
                         sprite = string.IsNullOrEmpty(_ButtonEastImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonEastImage);
                         text = _ButtonEastText;
                         break;
@@ -345,7 +345,7 @@ namespace RPGMaker.Codebase.Addon
                             (_ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding) * -1,
                             _ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/Enter";
+                        controlPath = "<Gamepad>/buttonSouth";
                         sprite = string.IsNullOrEmpty(_ButtonSouthImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonSouthImage);
                         text = _ButtonSouthText;
                         break;
@@ -354,7 +354,7 @@ namespace RPGMaker.Codebase.Addon
                             (_ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding) * -1,
                             _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
                         );
-                        controlPath = "<Keyboard>/Shift";
+                        controlPath = "<Gamepad>/buttonWest";
                         sprite = string.IsNullOrEmpty(_ButtonWestImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonWestImage);
                         text = _ButtonWestText;
                         break;
@@ -381,6 +381,11 @@ namespace RPGMaker.Codebase.Addon
                 rectTransform.anchorMax = anchorMax;
                 rectTransform.pivot = pivot;
 
+                var button = obj.AddComponent<Button>();
+                Navigation navigation = button.navigation;
+                navigation.mode = Navigation.Mode.None;
+                button.navigation = navigation;
+
                 var image = obj.AddComponent<Image>();
                 image.sprite = sprite;
                 image.raycastTarget = true;
@@ -389,6 +394,9 @@ namespace RPGMaker.Codebase.Addon
                     var onScreenButton = obj.AddComponent<OnScreenButton>();
                     onScreenButton.controlPath = controlPath;
                 }
+                button.targetGraphic = image;
+
+                //obj.AddComponent<InputDecide>();
 
                 var txtObj = new GameObject("Text");
                 RectTransform txtObjRectTransform = txtObj.AddComponent<RectTransform>();
