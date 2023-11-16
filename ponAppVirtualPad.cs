@@ -28,53 +28,37 @@
  * @type integer
  * @default 24
  * 
- * @param ButtonUpImage
- * @text 上ボタンの画像
- * @desc パッド左側の上ボタンの画像を設定します。
+ * @param NumbeOfButtons
+ * @text ボタンの数
+ * @desc 右側のボタンの数を設定します。
+ * @type select
+ * @option 2
+ * @option 4
+ * @default 2
+ * 
+ * @param StickButtonImage
+ * @text スティックボタンの画像
+ * @desc パッド左側のスティックボタンの画像を設定します。
  * @type string
  * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
  * 
- * @param ButtonUpText
- * @text 上ボタンのテキスト
- * @desc パッド左側の上ボタンのテキストを設定します。
- * @type string
- * @default ↑
+ * @param StickMovementRange
+ * @text スティックボタンの動かせる範囲
+ * @desc スティックボタンの動かせる範囲を設定します。
+ * @type integer
+ * @default 50
  * 
- * @param ButtonRightImage
- * @text 右ボタンの画像
- * @desc パッド左側の右ボタンの画像を設定します。
+ * @param StickButtonText
+ * @text スティックボタンのテキスト
+ * @desc パッド左側のスティックボタンのテキストを設定します。
+ * @type string
+ * @default 
+ * 
+ * @param StickUnderImage
+ * @text スティックボタンの下側の画像
+ * @desc パッド左側のスティックボタンの下側の画像を設定します。
  * @type string
  * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
- * 
- * @param ButtonRightText
- * @text 右ボタンのテキスト
- * @desc パッド左側の右ボタンのテキストを設定します。
- * @type string
- * @default →
- * 
- * @param ButtonDownImage
- * @text 下ボタンの画像
- * @desc パッド左側の下ボタンの画像を設定します。
- * @type string
- * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
- * 
- * @param ButtonDownText
- * @text 下ボタンのテキスト
- * @desc パッド左側の下ボタンのテキストを設定します。
- * @type string
- * @default ↓
- * 
- * @param ButtonLeftImage
- * @text 左ボタンの画像
- * @desc パッド左側の左ボタンの画像を設定します。
- * @type string
- * @default Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites/sbtn.png
- * 
- * @param ButtonLeftText
- * @text 左ボタンのテキスト
- * @desc パッド左側の左ボタンのテキストを設定します。
- * @type string
- * @default ←
  * 
  * @param ButtonNorthImage
  * @text 北ボタンの画像
@@ -149,14 +133,11 @@ namespace RPGMaker.Codebase.Addon
         private int _ButtonSize;
         private int _ButtonPadding;
         private int _CornerPadding;
-        private string _ButtonUpImage;
-        private string _ButtonUpText;
-        private string _ButtonRightImage;
-        private string _ButtonRightText;
-        private string _ButtonDownImage;
-        private string _ButtonDownText;
-        private string _ButtonLeftImage;
-        private string _ButtonLeftText;
+        private int _NumbeOfButtons;
+        private string _StickButtonImage;
+        private int _StickMovementRange;
+        private string _StickButtonText;
+        private string _StickUnderImage;
         private string _ButtonNorthImage;
         private string _ButtonNorthText;
         private string _ButtonEastImage;
@@ -170,14 +151,11 @@ namespace RPGMaker.Codebase.Addon
             int ButtonSize,
             int ButtonPadding,
             int CornerPadding,
-            string ButtonUpImage,
-            string ButtonUpText,
-            string ButtonRightImage,
-            string ButtonRightText,
-            string ButtonDownImage,
-            string ButtonDownText,
-            string ButtonLeftImage,
-            string ButtonLeftText,
+            int NumbeOfButtons,
+            string StickButtonImage,
+            int StickMovementRange,
+            string StickButtonText,
+            string StickUnderImage,
             string ButtonNorthImage,
             string ButtonNorthText,
             string ButtonEastImage,
@@ -190,14 +168,19 @@ namespace RPGMaker.Codebase.Addon
             _ButtonSize = ButtonSize;
             _ButtonPadding = ButtonPadding;
             _CornerPadding = CornerPadding;
-            _ButtonUpImage = ButtonUpImage;
-            _ButtonUpText = ButtonUpText;
-            _ButtonRightImage = ButtonRightImage;
-            _ButtonRightText = ButtonRightText;
-            _ButtonDownImage = ButtonDownImage;
-            _ButtonDownText = ButtonDownText;
-            _ButtonLeftImage = ButtonLeftImage;
-            _ButtonLeftText = ButtonLeftText;
+            _NumbeOfButtons = NumbeOfButtons;
+            _StickButtonImage = StickButtonImage;
+            _StickMovementRange = StickMovementRange;
+            if (_StickMovementRange < 5)
+            {
+                _StickMovementRange = 5;
+            }
+            else if (_StickMovementRange > 200)
+            {
+                _StickMovementRange = 200;
+            }
+            _StickButtonText = StickButtonText;
+            _StickUnderImage = StickUnderImage;
             _ButtonNorthImage = ButtonNorthImage;
             _ButtonNorthText = ButtonNorthText;
             _ButtonEastImage = ButtonEastImage;
@@ -225,39 +208,33 @@ namespace RPGMaker.Codebase.Addon
         private void CreateVirtualPad() {
             try
             {
-                // 新しいCanvasの作成
                 var canvasObject = new GameObject("CanvasVirtualPad");
                 var canvas = canvasObject.AddComponent<Canvas>();
                 RectTransform canvasRectTransform = canvasObject.GetComponent<RectTransform>();
-                //canvasRectTransform.SetParent(root.transform);
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 canvas.sortingOrder = 2000;
                 canvasObject.AddComponent<GraphicRaycaster>();
                 var font = GetFontInfoFromInputNameCanvas();
-                 string [] keyNames = {
-                    "ButtonUp",
-                    "ButtonRight",
-                    "ButtonDown", 
-                    "ButtonLeft", 
-                    /*"ButtonNorth",*/ 
-                    "ButtonEast", 
-                    "ButtonSouth", 
-                    /*"ButtonWest"*/
-                };
-                foreach (var keName in keyNames)
+                CreateStickButtonObject(canvasRectTransform, font);
+                if (_NumbeOfButtons == 0)
                 {
-                    CreateButtonObject(
-                        keName,
-                        canvasRectTransform,
-                        font
-                    );
+                    foreach (var keName in new []{ "ButtonEast", "ButtonSouth" })
+                    {
+                        CreateButtonObject(keName, canvasRectTransform, font);
+                    }
+                }
+                else
+                {
+                    foreach (var keName in new[] { "ButtonNorth", "ButtonEast", "ButtonSouth", "ButtonWest" })
+                    {
+                        CreateButtonObject(keName, canvasRectTransform, font);
+                    }
                 }
                 var canvasScaler = canvasObject.AddComponent<CanvasScaler>();
                 canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 canvasScaler.referenceResolution = new Vector2(1080, 1080);
                 canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-
-                canvasObject.AddComponent<KillTryToMove>();
+                canvasObject.AddComponent<MonitorInputSystem>();
                 DontDestroyOnLoad(canvasObject);
             }
             catch (Exception)
@@ -265,6 +242,93 @@ namespace RPGMaker.Codebase.Addon
                 Debug.LogWarning("Warning : Failed to create Virtual Pad");
             }
         }
+        private void CreateStickButtonObject(
+            RectTransform rootTransform,
+            Font font
+        ) {
+            try
+            {
+
+                var underObj = new GameObject("StickButton");
+                underObj.transform.SetParent(rootTransform);
+                RectTransform underObjRectTransform = underObj.AddComponent<RectTransform>();
+                float StickSize = _ButtonSize * (100 + _StickMovementRange * 2) / 100;
+                underObjRectTransform.sizeDelta = new Vector2(StickSize, StickSize);
+
+                if (_NumbeOfButtons == 0)
+                {
+                    underObjRectTransform.anchoredPosition = new Vector2(
+                        (_ButtonSize * 2 + _ButtonPadding - StickSize) / 2 + _CornerPadding,
+                        (_ButtonSize * 2 + _ButtonPadding - StickSize) / 2 + _CornerPadding
+                    );
+                }
+                else
+                {
+                    underObjRectTransform.anchoredPosition = new Vector2(
+                        (_ButtonSize * 3 + _ButtonPadding * 2 - StickSize) / 2 + _CornerPadding,
+                        (_ButtonSize * 3 + _ButtonPadding * 2 - StickSize) / 2 + _CornerPadding
+                    );
+                }
+                underObjRectTransform.anchorMin = new Vector2(0, 0);
+                underObjRectTransform.anchorMax = new Vector2(0, 0);
+                underObjRectTransform.pivot = new Vector2(0, 0);
+                var underObjImage = underObj.AddComponent<Image>();
+                if (!string.IsNullOrEmpty(_StickUnderImage))
+                {
+                    underObjImage.sprite = UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_StickUnderImage);
+                }
+                underObjImage.color = new Color(0, 0, 0, 0.5f);
+
+
+                var obj = new GameObject("StickButton");
+                obj.transform.SetParent(underObjRectTransform);
+                RectTransform rectTransform = obj.AddComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(_ButtonSize, _ButtonSize);
+                rectTransform.anchoredPosition = new Vector2(0, 0);
+                var onScreenStick = obj.AddComponent<OnScreenStick>();
+                onScreenStick.controlPath = "<Gamepad>/leftStick";
+                onScreenStick.movementRange = _StickMovementRange;
+                Vector2 anchorMin;
+                Vector2 anchorMax;
+                Vector2 pivot;
+                anchorMin = new Vector2(0.5f, 0.5f);
+                anchorMax = new Vector2(0.5f, 0.5f);
+                pivot = new Vector2(0.5f, 0.5f);
+                rectTransform.anchorMin = anchorMin;
+                rectTransform.anchorMax = anchorMax;
+                rectTransform.pivot = pivot;
+                var button = obj.AddComponent<Button>();
+                Navigation navigation = button.navigation;
+                navigation.mode = Navigation.Mode.None;
+                button.navigation = navigation;
+                var image = obj.AddComponent<Image>();
+                if (!string.IsNullOrEmpty(_StickButtonImage))
+                {
+                    image.sprite = UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_StickButtonImage);
+                }
+                image.raycastTarget = true;
+                button.targetGraphic = image;
+                var txtObj = new GameObject("Text");
+                RectTransform txtObjRectTransform = txtObj.AddComponent<RectTransform>();
+                txtObjRectTransform.sizeDelta = new Vector2(_ButtonSize, _ButtonSize);
+                txtObjRectTransform.anchorMin = anchorMin;
+                txtObjRectTransform.anchorMax = anchorMax;
+                txtObjRectTransform.pivot = pivot;
+                txtObj.transform.SetParent(rectTransform);
+                txtObjRectTransform.localPosition = new Vector3(0, 0, 0);
+                var txtObjText = txtObj.AddComponent<Text>();
+                txtObjText.font = font;
+                txtObjText.fontSize = 24;
+                txtObjText.color = Color.black;
+                txtObjText.text = _StickButtonText;
+                txtObjText.alignment = TextAnchor.MiddleCenter;
+            }
+            catch (Exception)
+            {
+                Debug.LogWarning("Warning : Failed to create Button Object");
+            }
+        }
+
         private void CreateButtonObject(
             string name, 
             RectTransform rootTransform,
@@ -282,46 +346,6 @@ namespace RPGMaker.Codebase.Addon
                 string text = "";
                 switch (name)
                 {
-                    case "ButtonUp":
-                        IsLeftSide = true;
-                        rectTransform.anchoredPosition = new Vector2(
-                            _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding,
-                            _ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding
-                        );
-                        controlPath = "<Gamepad>/dpad/up";
-                        sprite = string.IsNullOrEmpty(_ButtonUpImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonUpImage);
-                        text = _ButtonUpText;
-                        break;
-                    case "ButtonRight":
-                        IsLeftSide = true;
-                        rectTransform.anchoredPosition = new Vector2(
-                            _ButtonSize * 2 + _ButtonPadding * 2 + _CornerPadding,
-                            _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
-                        );
-                        controlPath = "<Gamepad>/dpad/right";
-                        sprite = string.IsNullOrEmpty(_ButtonRightImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonRightImage);
-                        text = _ButtonRightText;
-                        break;
-                    case "ButtonDown":
-                        IsLeftSide = true;
-                        rectTransform.anchoredPosition = new Vector2(
-                            _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding,
-                            _ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding
-                        );
-                        controlPath = "<Gamepad>/dpad/down";
-                        sprite = string.IsNullOrEmpty(_ButtonDownImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonDownImage);
-                        text = _ButtonDownText;
-                        break;
-                    case "ButtonLeft":
-                        IsLeftSide = true;
-                        rectTransform.anchoredPosition = new Vector2(
-                            _ButtonSize * 0 + _ButtonPadding * 0 + _CornerPadding,
-                            _ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding
-                        );
-                        controlPath = "<Gamepad>/dpad/left";
-                        sprite = string.IsNullOrEmpty(_ButtonLeftImage) ? null : UnityEditorWrapper.AssetDatabaseWrapper.LoadAssetAtPath<Sprite>(_ButtonLeftImage);
-                        text = _ButtonLeftText;
-                        break;
                     case "ButtonNorth":
                         rectTransform.anchoredPosition = new Vector2(
                             (_ButtonSize * 1 + _ButtonPadding * 1 + _CornerPadding) * -1,
@@ -395,8 +419,6 @@ namespace RPGMaker.Codebase.Addon
                     onScreenButton.controlPath = controlPath;
                 }
                 button.targetGraphic = image;
-
-                //obj.AddComponent<InputDecide>();
 
                 var txtObj = new GameObject("Text");
                 RectTransform txtObjRectTransform = txtObj.AddComponent<RectTransform>();

@@ -37,11 +37,13 @@ namespace RPGMaker.Codebase.Addon.ponApp.VirtualPad
             AddressableAssetSettingsDefaultObject.Settings = _settings;
             string[] pathAdd =
             {
-                "Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites"
+                "Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/Sprites",
+                "Assets/RPGMaker/Codebase/Add-ons/ponAppVirtualPad/InputAction"
             };
             string[] extensionAdd =
             {
-                "*.png"
+                "*.png",
+                "*.inputactions"
             };
             bool result = true;
             for (var i = 0; i < pathAdd.Length; i++)
