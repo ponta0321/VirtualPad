@@ -7,13 +7,13 @@
  * @text Button Size
  * @desc Sets the size of the button.
  * @type integer
- * @default 96
+ * @default 168
  * 
  * @param ButtonTextSize
  * @text Button Text Size
  * @desc Sets the text to be displayed in the center of the button.
  * @type integer
- * @default 36
+ * @default 84
  * 
  * @param ButtonPadding
  * @text Button Spacing
@@ -25,7 +25,7 @@
  * @text Distance to the edge of the screen
  * @desc Sets the distance between the edge of the screen and the button.
  * @type integer
- * @default 48
+ * @default 84
  * 
  * @param NumbeOfButtons
  * @text Number of buttons
